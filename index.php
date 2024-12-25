@@ -27,7 +27,7 @@
 <div class="container text-center mt-5">
     <h1>Sorteio da(o) Anfitriã(o) - IV Encontro da Família Cecatto</h1>
     <div id="people-list" class="d-flex flex-wrap justify-content-center mt-4"></div>
-    <button id="draw-button" class="btn btn-primary mt-4">Sortear</button>
+    <button id="draw-button" class="btn btn-primary my-4">Sortear</button>
 </div>
 
 <!-- Modal -->
