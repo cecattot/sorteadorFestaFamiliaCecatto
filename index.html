@@ -14,9 +14,11 @@
             text-align: center;
             margin: 10px;
         }
+
         .person-card img {
             border-radius: 50%;
         }
+
         .modal-body img {
             max-width: 100%;
             border-radius: 10px;
@@ -50,41 +52,49 @@
                 ></button>
             </div>
             <div class="modal-body text-center">
-                <h4 id="modal-message"></h4>
-                <img id="modal-image" alt="Vencedor">
+                <h4 id="modal-message">Aguarde...</h4>
+                <img id="modal-image" width="400px" height="400px" src="img/Avos.jpg" alt="Vencedor">
             </div>
             <div class="modal-footer">
                 <button
                         type="button"
                         class="btn btn-secondary"
                         data-mdb-dismiss="modal"
-                >Fechar</button>
+                >Fechar
+                </button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Audio -->
+<audio id="audio" src="audio/audio.mp3" preload="auto"></audio>
+
 <!-- MDBootstrap JS -->
 <script
         src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"
 ></script>
+<script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+
 <script>
     // Lista de pessoas com imagens
     const people = [
-        { name: "Terê", image: "img/tere.jpg" },
-        { name: "Lúcia", image: "img/LuciaeNego.jpeg" },
-        { name: "Fátima", image: "img/fatima.png" },
-        { name: "Afonso", image: "img/Afonso.JPG" },
-        { name: "Marcos", image: "img/Marco.png" },
-        { name: "Gorete", image: "img/GoreteeNego.jpg" },
-        { name: "Kid", image: "img/KideVania.jpeg" },
-        { name: "Iri", image: "img/IrieteRonaldo.JPG" }
+        {name: "Tia Terê", image: "img/tere.jpg"},
+        {name: "Tia Lúcia", image: "img/LuciaeNego.jpeg"},
+        {name: "Tia Fátima", image: "img/fatima.png"},
+        {name: "Tio Fonso", image: "img/Afonso.JPG"},
+        {name: "Tio Marcos", image: "img/Marco.png"},
+        {name: "Tia Gorete", image: "img/GoreteeNego.jpg"},
+        {name: "Tio Kid", image: "img/KideVania.jpeg"},
+        {name: "Tia Iri", image: "img/IrieteRonaldo.JPG"}
     ];
 
     const peopleList = document.getElementById("people-list");
     const drawButton = document.getElementById("draw-button");
     const modalMessage = document.getElementById("modal-message");
     const modalImage = document.getElementById("modal-image");
+    const audio = document.getElementById("audio");
+
 
     // Renderiza a lista de pessoas
     people.forEach((person) => {
@@ -99,17 +109,43 @@
 
     // Evento de sorteio
     drawButton.addEventListener("click", () => {
-        const randomIndex = Math.floor(Math.random() * people.length);
-        const winner = people[randomIndex];
 
-        // Atualiza o conteúdo do modal
-        modalMessage.innerHTML = `O encontro da família Cecatto em 2025 será organizado pela(o) tia(o):<br><h1>${winner.name}</h1>`;
-        modalImage.src = winner.image;
-        modalImage.alt = `Foto de ${winner.name}`;
-
-        // Abre o modal
         const winnerModal = new mdb.Modal(document.getElementById('winnerModal'));
         winnerModal.show();
+        setTimeout(() => {
+            audio.setAttribute('src', 'audio/audio.mp3');
+
+            audio.play();
+
+            const randomIndex = Math.floor(Math.random() * people.length);
+            let interval;
+
+            // Exibe suspense com alternância de nomes
+            let count = 0;
+            interval = setInterval(() => {
+                const randomPerson = people[Math.floor(Math.random() * people.length)];
+                modalMessage.innerHTML = `O encontro da família Cecatto em 2025 será organizado pela(o):<br><h2>${randomPerson.name}</h2>`;
+                modalImage.src = randomPerson.image;
+                modalImage.alt = `Foto de ${randomPerson.name}`;
+            }, 100);  // A cada 100ms troca o nome
+
+            // Depois de 2 segundos, para o suspense e exibe o vencedor
+            setTimeout(() => {
+                audio.setAttribute('src', 'audio/videoplayback.m4a');
+                audio.play();
+                clearInterval(interval);
+                modalMessage.innerHTML = `O encontro da família Cecatto em 2025 será organizado pela(o):<br><h1>${people[randomIndex].name}</h1>`;
+                modalImage.src = people[randomIndex].image;
+                modalImage.alt = `Foto de ${people[randomIndex].name}`;
+
+                confetti({
+                    particleCount: 17000,
+                    spread: 0,
+                    origin: {y: 0.6}
+                });
+
+            }, 3900);  // Suspense dura 4 segundos
+        }, 1000)
     });
 </script>
 </body>
